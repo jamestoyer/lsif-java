@@ -118,6 +118,10 @@ public class DocumentIndexer {
 
         @Override
         public <T> void visitCtLocalVariable(CtLocalVariable<T> el) {
+            if (el.getPosition() instanceof NoSourcePosition) {
+                return;
+            }
+
             super.visitCtLocalVariable(el);
             emitDefinition(mkRange(el.getPosition()), mkDoc(el.getType(), el.getDocComment()));
         }
@@ -130,6 +134,10 @@ public class DocumentIndexer {
 
         @Override
         public <T> void visitCtMethod(CtMethod<T> el) {
+            if (el.getPosition() instanceof NoSourcePosition) {
+                return;
+            }
+
             super.visitCtMethod(el);
             emitDefinition(nameRange(el), mkDoc(el.getType(), el.getDocComment()));
         }
@@ -213,6 +221,11 @@ public class DocumentIndexer {
             if (decl == null) {
                 return;
             }
+
+            if (decl.getPosition() instanceof NoSourcePosition) {
+                return;
+            }
+
             emitUse(
                     useRange,
                     nameRange(decl),
@@ -226,10 +239,16 @@ public class DocumentIndexer {
             if (el.getPosition() instanceof NoSourcePosition) {
                 return;
             }
+
             CtType decl = el.getDeclaration();
             if (decl == null) {
                 return;
             }
+
+            if (decl.getPosition() instanceof NoSourcePosition) {
+                return;
+            }
+
             emitUse(
                     mkRange(el.getPosition()),
                     nameRange(decl),

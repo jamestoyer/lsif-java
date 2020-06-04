@@ -40,10 +40,14 @@ public class ProjectIndexer {
 
         MavenLauncher spoon = new MavenLauncher(arguments.projectRoot, MavenLauncher.SOURCE_TYPE.ALL_SOURCE);
         spoon.getEnvironment().setIgnoreDuplicateDeclarations(true);
-        spoon.getEnvironment().setComplianceLevel(9);
+        spoon.getEnvironment().setComplianceLevel(8);
         spoon.buildModel();
         Map<String, CtElement> typeByFile = new HashMap();
         for (CtElement el : spoon.getModel().getAllTypes()) {
+	        if (el.getPosition().getFile() == null ){
+	            continue;
+            }
+
             System.out.println("Found " + el.getPosition().getFile().getPath());
             typeByFile.put(el.getPosition().getFile().getPath(), el);
         }
